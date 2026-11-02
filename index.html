@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#1f6feb">
+  <title>礁溪國小 3D 校園導覽</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js"
+      }
+    }
+  </script>
+</head>
+
+<body>
+  <div id="app">
+    <!-- 頂部列：標題 / 搜尋 / 工具按鈕 -->
+    <header id="header">
+      <div id="brand">
+        <span class="logo">礁</span>
+        <span class="t">礁溪國小 3D 校園導覽
+          <small>礁溪國民小學 · Jiaoxi Elementary School</small>
+        </span>
+      </div>
+      <div id="searchWrap">
+        <span id="searchIcon">🔍</span>
+        <input id="searchInput" type="search" autocomplete="off" spellcheck="false"
+          placeholder="搜尋班級號碼、處室或建物（例：301、教務處、圖書館）">
+        <button id="searchClear" title="清除">✕</button>
+        <div id="searchResults"></div>
+      </div>
+      <div id="hdrBtns"></div>
+    </header>
+
+    <!-- 指北針（右側為北） -->
+    <div id="compass" title="點擊校正方位（右側為北）"></div>
+
+    <!-- 左側導覽：建物 / 樓層 / 導覽路線 -->
+    <div id="leftNav" class="panel"></div>
+
+    <!-- 右側建物資訊抽屜 -->
+    <div id="detail" class="panel"></div>
+
+    <!-- 小地圖 -->
+    <div id="minimapWrap" title="點擊小地圖可移動視角">
+      <canvas id="minimap"></canvas>
+      <div id="minimapLabel">小地圖 · 右側為北</div>
+    </div>
+
+    <!-- 精選導覽列 -->
+    <div id="tourBar" class="panel"></div>
+
+    <!-- 步行路線 HUD -->
+    <div id="walkBar" class="panel"></div>
+
+    <!-- 第一人稱準星 -->
+    <div id="fpHud"></div>
+
+    <!-- 手機虛擬搖桿 -->
+    <div id="joystick">
+      <div id="joyKnob"></div>
+    </div>
+
+    <!-- 手機底部工具列 -->
+    <nav id="dock"></nav>
+
+    <div id="footer">
+      <span>資料：校園平面圖 · 115 學年度教室配置圖</span>
+      <span>比例尺 <b>1:1000</b>（1 px = 0.2061 m）</span>
+      <span>方位 <b>右側為北</b></span>
+    </div>
+
+    <div id="toast"></div>
+  </div>
+
+  <!-- 載入畫面 -->
+  <div id="loading">
+    <div class="box">
+      <div class="spin"></div>
+      <h1>礁溪國小 3D 校園導覽</h1>
+      <p>正在建置校園模型…</p>
+      <div id="loadPct">初始化</div>
+    </div>
+  </div>
+
+  <!-- 資料檔：以傳統 script 載入，雙擊 index.html（file://）亦可正常運作 -->
+  <script src="data/mapimg.js"></script>
+  <script src="data/buildings.js"></script>
+  <script src="data/classrooms-115.js"></script>
+  <script src="data/walkways.js"></script>
+  <script src="data/tours.js"></script>
+  <script src="js/main.js"></script>
+
+  <!-- three.js 由 import map 從 CDN 載入（唯一需要連網的部分） -->
+  <script type="module">
+    (async () => {
+      try {
+        const THREE = await import('three');
+        window.startApp(THREE);
+      } catch (err) {
+        console.error(err);
+        const p = document.getElementById('loadPct');
+        if (p) p.textContent = '無法載入 three.js（需可連線上 CDN）：' + err.message;
+      }
+    })();
+  </script>
+</body>
+
+</html>
